@@ -18,6 +18,8 @@ public class DatabaseConfiguration {
         final DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(Objects.requireNonNull(env.getProperty("JDBCDriver")));
         dataSource.setUrl(env.getProperty("DatabaseURL"));
+        dataSource.setUsername(env.getProperty("dbusername"));
+        dataSource.setPassword(env.getProperty("dbpassword"));
         return dataSource;
 
     }
