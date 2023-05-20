@@ -3,11 +3,11 @@ package com.semestralka.semestralkaVPA.controllers;
 import com.google.gson.Gson;
 import com.semestralka.semestralkaVPA.entities.FilesModel;
 import com.semestralka.semestralkaVPA.models.UploadFileResult;
+import com.semestralka.semestralkaVPA.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ContentDisposition;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -22,7 +22,7 @@ public class FileController {
     private final Gson gson = new Gson();
 
 
-    @RequestMapping(method = RequestMethod.GET, value = "/file")
+    @RequestMapping(method = RequestMethod.GET, value = "/filejson")
     public String getFileForm(@RequestParam("id") long id) {
         Optional<FilesModel> optionalFilesModel = fileService.getFile(id);
         if (optionalFilesModel.isEmpty()) {
@@ -50,16 +50,37 @@ public class FileController {
         return uriComponentsBuilder.path("/file/" + id).build().toString();
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/deletefile")
+    public ResponseEntity<Object> deleteFile(@RequestParam("id") long id) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (!auth.isAuthenticated() || auth.getPrincipal().toString().toLowerCase().contains("anon".toLowerCase())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        } else {
+            if (fileService.deleteFile(id, (UserPrincipal) auth.getPrincipal())) {
+                return ResponseEntity.ok().build();
+            }
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
+
     @RequestMapping(method = RequestMethod.POST, value = "/file/upload")
-    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("filename") String filename,
-                                             UriComponentsBuilder uriComponentsBuilder) {
+    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
         try {
-            UploadFileResult uploadFileResult = fileService.uploadFile(file.getBytes(), filename);
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            UploadFileResult uploadFileResult;
+            if (!auth.isAuthenticated() || auth.getPrincipal().toString().toLowerCase().contains("anon".toLowerCase())) {
+                UserPrincipal principal = (UserPrincipal) auth.getPrincipal();
+                uploadFileResult = fileService.uploadFile(file.getBytes(), file.getOriginalFilename(), principal);
+            } else {
+                uploadFileResult = fileService.uploadFile(file.getBytes(), file.getOriginalFilename(), null);
+            }
             if (uploadFileResult.isSuccess()) {
-                return ResponseEntity.ok().body(uriComponentsBuilder.path("/file/" + uploadFileResult.getFileId()).build().toString());
+                HttpHeaders headers = new HttpHeaders();
+                headers.add("Location", "/");
+                return ResponseEntity.status(HttpStatus.FOUND).headers(headers).build();
             }
         } catch (IOException e) {
-            ResponseEntity.badRequest().body("Failed to upload file.");
+            return ResponseEntity.badRequest().body("Failed to upload file.");
         }
         throw new RuntimeException();
 

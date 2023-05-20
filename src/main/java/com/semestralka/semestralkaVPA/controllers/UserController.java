@@ -22,7 +22,6 @@ public class UserController {
     }
     @RequestMapping(method = RequestMethod.POST,value = "/register")
     public ResponseEntity<Object> register(@RequestParam("name") String name, @RequestParam("password") String password) {
-        System.out.println("HEREEE " + name + " " + password);
        if (registerService.registerUser(name,password)) {
             return ResponseEntity.ok().build();
         }
