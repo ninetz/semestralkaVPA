@@ -1,6 +1,7 @@
 package com.semestralka.semestralkaVPA.controllers;
 
 import com.semestralka.semestralkaVPA.entities.FilesModel;
+import com.semestralka.semestralkaVPA.models.UploadFileResult;
 import com.semestralka.semestralkaVPA.repositories.FileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,11 +17,11 @@ public class FileService {
         return fileRepository.findById(id);
     }
 
-    public boolean uploadFile(byte[] file, String filename) {
+    public UploadFileResult uploadFile(byte[] file, String filename) {
         FilesModel filesModel = new FilesModel();
         filesModel.setFile(file);
         filesModel.setFilename(filename);
-        fileRepository.save(filesModel);
-        return true;
+        FilesModel resultModel = fileRepository.save(filesModel);
+        return new UploadFileResult(true, resultModel.getId());
     }
 }
