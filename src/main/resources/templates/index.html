@@ -7,15 +7,21 @@
 
 <body>
 <a>All files : </a>
-<table>
-    <th:block th:each="file : ${filesModels}">
-        <tr>
-            <td th:text="${file}"></td>
-        </tr>
-    </th:block>
+<table class="table table-striped table-responsive-md" border="1" style="width:500px">
+  <thead>
+  <tr>
+    <th>Filename</th>
+    <th>Link</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="file : ${filesModels}">
+    <td th:text="${file.filename}"></td>
+    <td scope="row"><a th:href="${templatePath + file.id}" th:text="${templatePath + file.id}"></a></td>
+  </tr>
+  </tbody>
 </table>
 
 
 </body>
-
 </html>

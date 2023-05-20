@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @Controller
 public class WebController {
@@ -12,7 +13,8 @@ public class WebController {
     FileRepository fileRepository;
 
     @GetMapping("/")
-    public String getHome(Model model) {
+    public String getHome(Model model, UriComponentsBuilder uriComponentsBuilder) {
+        model.addAttribute("templatePath", uriComponentsBuilder.path("/file/").build().toString());
         model.addAttribute("filesModels", fileRepository.findAll());
         return "index";
     }
