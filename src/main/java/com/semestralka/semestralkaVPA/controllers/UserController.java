@@ -3,7 +3,6 @@ package com.semestralka.semestralkaVPA.controllers;
 import com.semestralka.semestralkaVPA.security.UserPrincipal;
 import com.semestralka.semestralkaVPA.services.RegisterService;
 import com.semestralka.semestralkaVPA.services.UserService;
-import io.swagger.models.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;

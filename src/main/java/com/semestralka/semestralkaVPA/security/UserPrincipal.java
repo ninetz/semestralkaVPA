@@ -9,18 +9,24 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;
 public class UserPrincipal implements UserDetails, Principal {
-    
+
     private final ArrayList<GrantedAuthority> authorities = new ArrayList<>();
     private final String password;
     private final String username;
+    private long id;
 
-    public UserPrincipal(User user) {
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public UserPrincipal(User user, long id) {
         this.username = user.getUsername();
         this.password = user.getPassword();
-    }
-    public UserPrincipal(String username, String password) {
-        this.username = username;
-        this.password = password;
+        this.id = id;
     }
 
     @Override
