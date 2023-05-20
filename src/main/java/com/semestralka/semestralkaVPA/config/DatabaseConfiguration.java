@@ -1,4 +1,4 @@
-package com.semestralka.semestralkaVPA;
+package com.semestralka.semestralkaVPA.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
