@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Show all files</title>
+</head>
+
+<body>
+<a>All files : </a>
+<table>
+    <th:block th:each="file : ${filesModels}">
+        <tr>
+            <td th:text="${file}"></td>
+        </tr>
+    </th:block>
+</table>
+
+
+</body>
+
+</html>
