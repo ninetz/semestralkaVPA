@@ -27,11 +27,12 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeRequests(authorize -> authorize
+        http.csrf().disable().authorizeRequests(authorize -> authorize.requestMatchers("/register").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(withDefaults())
-                .httpBasic(withDefaults());
+                .httpBasic(withDefaults())
+                ;
         return http.build();
     }
 }
