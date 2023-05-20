@@ -7,6 +7,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,12 +20,13 @@ public class RESTAuthenticationProvider implements AuthenticationProvider {
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String name = authentication.getName();
-        String password = authentication.getCredentials().toString();
+        String plainTextPassword = authentication.getCredentials().toString();
+
         UserDetails user = userService.loadUserByUsername(name);
-        if (user != null && password.equals(user.getPassword())) {
+        if (user != null && BCrypt.checkpw(plainTextPassword, user.getPassword())) {
             return new UsernamePasswordAuthenticationToken(
                     user,
-                    password, new ArrayList<>());
+                    user.getPassword(), new ArrayList<>());
         }
         return null;
     }
