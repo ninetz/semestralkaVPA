@@ -34,7 +34,7 @@ public class FileController {
         return gson.toJson(optionalFilesModel.get());
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/file/{id}")
+    @RequestMapping(method = RequestMethod.GET, value = "/file/{id}", produces = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity getFile(@PathVariable("id") long id) {
         Optional<FilesModel> optionalFilesModel = fileService.getFile(id);
         if (optionalFilesModel.isEmpty()) {
@@ -44,7 +44,7 @@ public class FileController {
         ContentDisposition contentDisposition = ContentDisposition.attachment().filename(filesModel.getFilename()).build();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentDisposition(contentDisposition);
-        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        headers.setContentType(MediaType.valueOf(MediaType.MULTIPART_FORM_DATA_VALUE));
         return ResponseEntity.ok().headers(headers).body(filesModel.getFile());
     }
 
@@ -66,7 +66,7 @@ public class FileController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
-    @RequestMapping(method = RequestMethod.PUT, value = "/file/upload")
+    @RequestMapping(method = RequestMethod.PUT, value = "/file/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file,
                                              UriComponentsBuilder uriComponentsBuilder) {
         try {
