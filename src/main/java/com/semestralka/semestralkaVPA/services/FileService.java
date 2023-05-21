@@ -1,4 +1,4 @@
-package com.semestralka.semestralkaVPA.controllers;
+package com.semestralka.semestralkaVPA.services;
 
 import com.semestralka.semestralkaVPA.entities.FilesModel;
 import com.semestralka.semestralkaVPA.entities.User;
