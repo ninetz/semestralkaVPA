@@ -34,13 +34,12 @@ public class SecurityConfiguration {
                         .requestMatchers("/api/register").permitAll()
                         .requestMatchers("/api/file/*").permitAll()
                         .requestMatchers("/home").permitAll()
+                        .requestMatchers("/login").permitAll()
                         .requestMatchers("/api/getuser/*").hasRole("Administrator")
 
                 )
-                .formLogin(formLogin -> formLogin
-                        .loginPage("/login")
-                        .permitAll()
-                ).httpBasic(withDefaults())
+                .formLogin().successForwardUrl("/home").defaultSuccessUrl("/home").permitAll().and()
+                .httpBasic(withDefaults())
                 .rememberMe(Customizer.withDefaults());
         return http.build();
     }
