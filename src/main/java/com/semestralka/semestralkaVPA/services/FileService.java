@@ -6,7 +6,9 @@ import com.semestralka.semestralkaVPA.models.UploadFileResult;
 import com.semestralka.semestralkaVPA.repositories.FileRepository;
 import com.semestralka.semestralkaVPA.repositories.UserRepository;
 import com.semestralka.semestralkaVPA.security.UserPrincipal;
+import com.semestralka.semestralkaVPA.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -34,10 +36,16 @@ public class FileService {
         return new UploadFileResult(true, resultModel.getId());
     }
 
-    public boolean deleteFile(long id, UserPrincipal principal) {
+    public boolean deleteFile(long id, Authentication auth) {
         Optional<FilesModel> filesModel = fileRepository.findById(id);
-        if (filesModel.isPresent()) {
-            if (filesModel.get().getUser().getId() == principal.getId()) {
+        UserPrincipal userPrincipal = (UserPrincipal) auth.getPrincipal();
+        if (SecurityUtils.isUserInRole(auth, SecurityUtils.ADMINISTRATOR_ROLE)) {
+            fileRepository.deleteById(id);
+            return true;
+        }
+        if (filesModel.isPresent() && filesModel.get().getUser() != null) {
+            long userId = filesModel.get().getUser().getId();
+            if (userId == userPrincipal.getId()) {
                 fileRepository.deleteById(id);
                 return true;
             }
