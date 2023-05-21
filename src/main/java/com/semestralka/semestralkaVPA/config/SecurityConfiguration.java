@@ -36,7 +36,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/api/file/*").permitAll()
                         .requestMatchers("/home").permitAll()
                         .requestMatchers("/login").permitAll()
-                        .requestMatchers("/api/getuser/*").hasRole(SecurityUtils.ADMINISTRATOR_ROLE)
+                        .requestMatchers("/api/getuser/*").hasAuthority(SecurityUtils.ADMINISTRATOR_ROLE)
                         .anyRequest().authenticated()
 
                 )

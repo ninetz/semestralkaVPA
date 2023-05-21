@@ -25,9 +25,7 @@ public class RESTAuthenticationProvider implements AuthenticationProvider {
 
         UserPrincipal user = userService.loadUserByUsername(name);
         if (user != null && BCrypt.checkpw(plainTextPassword, user.getPassword())) {
-            return new UsernamePasswordAuthenticationToken(
-                    user,
-                    user.getPassword(), user.getAuthorities());
+            return new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities());
         }
         return null;
     }
