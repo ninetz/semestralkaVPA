@@ -1,5 +1,6 @@
 package com.semestralka.semestralkaVPA.config;
 
+import com.semestralka.semestralkaVPA.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,7 +36,8 @@ public class SecurityConfiguration {
                         .requestMatchers("/api/file/*").permitAll()
                         .requestMatchers("/home").permitAll()
                         .requestMatchers("/login").permitAll()
-                        .requestMatchers("/api/getuser/*").hasRole("Administrator")
+                        .requestMatchers("/api/getuser/*").hasRole(SecurityUtils.ADMINISTRATOR_ROLE)
+                        .anyRequest().authenticated()
 
                 )
                 .formLogin().successForwardUrl("/home").defaultSuccessUrl("/home").permitAll().and()

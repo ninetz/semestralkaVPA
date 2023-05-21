@@ -4,6 +4,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
 public class SecurityUtils {
+    public static final String ADMINISTRATOR_ROLE = "Administrator";
     public static boolean isUserAnonymous(Authentication auth) {
         return auth.getPrincipal().toString().toLowerCase().contains("anon".toLowerCase());
     }

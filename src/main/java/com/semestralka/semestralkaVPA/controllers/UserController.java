@@ -21,7 +21,7 @@ public class UserController {
         UserPrincipal userDetails = userService.loadUserByUsername(username);
         return userService.loadUserByUsername(username);
     }
-    @RequestMapping(method = RequestMethod.POST,value = "/register")
+    @RequestMapping(method = RequestMethod.POST, value = "/api/register")
     public ResponseEntity<Object> register(@RequestParam("name") String name, @RequestParam("password") String password) {
        if (registerService.registerUser(name,password)) {
             return ResponseEntity.ok().build();
