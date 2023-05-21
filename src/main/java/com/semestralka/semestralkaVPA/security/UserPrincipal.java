@@ -6,11 +6,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.security.auth.Subject;
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.Collection;
 public class UserPrincipal implements UserDetails, Principal {
 
-    private final ArrayList<GrantedAuthority> authorities = new ArrayList<>();
+    private final Collection<GrantedAuthority> authorities;
     private final String password;
     private final String username;
     private long id;
@@ -23,10 +22,11 @@ public class UserPrincipal implements UserDetails, Principal {
         this.id = id;
     }
 
-    public UserPrincipal(User user, long id) {
+    public UserPrincipal(User user, long id, Collection<GrantedAuthority> authorities) {
         this.username = user.getUsername();
         this.password = user.getPassword();
         this.id = id;
+        this.authorities = authorities;
     }
 
     @Override
