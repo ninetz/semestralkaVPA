@@ -18,7 +18,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebSecurity
 public class SecurityConfiguration {
     @Autowired
-    private RESTAuthenticationProvider authenticationProvider;
+    private AuthenticationProviderImpl authenticationProvider;
 
     @Bean
     public AuthenticationManager authManager(HttpSecurity http) throws Exception {

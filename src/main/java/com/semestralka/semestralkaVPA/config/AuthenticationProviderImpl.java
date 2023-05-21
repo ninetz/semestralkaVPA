@@ -1,6 +1,5 @@
 package com.semestralka.semestralkaVPA.config;
 
-import com.semestralka.semestralkaVPA.repositories.RolesRepository;
 import com.semestralka.semestralkaVPA.security.UserPrincipal;
 import com.semestralka.semestralkaVPA.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +11,9 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 @Service
-public class RESTAuthenticationProvider implements AuthenticationProvider {
+public class AuthenticationProviderImpl implements AuthenticationProvider {
     @Autowired
     UserService userService;
-    @Autowired
-    RolesRepository rolesRepository;
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
