@@ -32,12 +32,9 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/register").permitAll()
-                        .requestMatchers("/api/file/*").permitAll()
-                        .requestMatchers("/home").permitAll()
-                        .requestMatchers("/login").permitAll()
+                        .requestMatchers("/api/deletefile)").authenticated()
                         .requestMatchers("/api/getuser/*").hasAuthority(SecurityUtils.ADMINISTRATOR_ROLE)
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
 
                 )
                 .formLogin().successForwardUrl("/home").defaultSuccessUrl("/home").permitAll().and()
