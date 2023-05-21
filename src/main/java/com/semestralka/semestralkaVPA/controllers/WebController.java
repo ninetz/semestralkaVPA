@@ -14,7 +14,7 @@ public class WebController {
 
     @GetMapping("/home")
     public String getHome(Model model, UriComponentsBuilder uriComponentsBuilder) {
-        model.addAttribute("templatePath", uriComponentsBuilder.path("/file/").build().toString());
+        model.addAttribute("templatePath", uriComponentsBuilder.path("/api/file/").build().toString());
         model.addAttribute("filesModels", fileRepository.findAll());
         return "index";
     }
