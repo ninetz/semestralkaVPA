@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/api")
 public class UserController {
     @Autowired
     UserService userService;
@@ -17,7 +18,7 @@ public class UserController {
 
     @GetMapping(value = "/getuser/{username}")
     public UserDetails getUserDetails(@PathVariable String username) {
-        UserPrincipal userDetails = (UserPrincipal) userService.loadUserByUsername(username);
+        UserPrincipal userDetails = userService.loadUserByUsername(username);
         return userService.loadUserByUsername(username);
     }
     @RequestMapping(method = RequestMethod.POST,value = "/register")
