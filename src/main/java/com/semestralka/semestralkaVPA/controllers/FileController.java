@@ -5,6 +5,7 @@ import com.semestralka.semestralkaVPA.entities.FilesModel;
 import com.semestralka.semestralkaVPA.models.UploadFileResult;
 import com.semestralka.semestralkaVPA.security.UserPrincipal;
 import com.semestralka.semestralkaVPA.services.FileService;
+import com.semestralka.semestralkaVPA.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.security.core.Authentication;
@@ -55,7 +56,7 @@ public class FileController {
     @RequestMapping(method = RequestMethod.GET, value = "/deletefile")
     public ResponseEntity<Object> deleteFile(@RequestParam("id") long id) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (!auth.isAuthenticated() || auth.getPrincipal().toString().toLowerCase().contains("anon".toLowerCase())) {
+        if (!auth.isAuthenticated() || SecurityUtils.isUserAnonymous(auth)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         } else {
             if (fileService.deleteFile(id, (UserPrincipal) auth.getPrincipal())) {
@@ -70,7 +71,7 @@ public class FileController {
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             UploadFileResult uploadFileResult;
-            if (!auth.isAuthenticated() || !auth.getPrincipal().toString().toLowerCase().contains("anon".toLowerCase())) {
+            if (!auth.isAuthenticated() || SecurityUtils.isUserAnonymous(auth)) {
                 UserPrincipal principal = (UserPrincipal) auth.getPrincipal();
                 uploadFileResult = fileService.uploadFile(file.getBytes(), file.getOriginalFilename(), principal);
             } else {
