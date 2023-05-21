@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.semestralka.semestralkaVPA.entities.FilesModel;
 import com.semestralka.semestralkaVPA.models.UploadFileResult;
 import com.semestralka.semestralkaVPA.security.UserPrincipal;
+import com.semestralka.semestralkaVPA.services.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.security.core.Authentication;
@@ -15,7 +16,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.io.IOException;
 import java.util.Optional;
 
-@RestController
+@RestController()
+@RequestMapping("/api")
 public class FileController {
     @Autowired
     FileService fileService;
@@ -68,7 +70,7 @@ public class FileController {
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             UploadFileResult uploadFileResult;
-            if (!auth.isAuthenticated() || auth.getPrincipal().toString().toLowerCase().contains("anon".toLowerCase())) {
+            if (!auth.isAuthenticated() || !auth.getPrincipal().toString().toLowerCase().contains("anon".toLowerCase())) {
                 UserPrincipal principal = (UserPrincipal) auth.getPrincipal();
                 uploadFileResult = fileService.uploadFile(file.getBytes(), file.getOriginalFilename(), principal);
             } else {
@@ -76,7 +78,7 @@ public class FileController {
             }
             if (uploadFileResult.isSuccess()) {
                 HttpHeaders headers = new HttpHeaders();
-                headers.add("Location", "/");
+                headers.add("Location", "/home");
                 return ResponseEntity.status(HttpStatus.FOUND).headers(headers).build();
             }
         } catch (IOException e) {
