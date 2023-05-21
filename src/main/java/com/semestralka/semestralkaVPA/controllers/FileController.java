@@ -53,34 +53,34 @@ public class FileController {
         return uriComponentsBuilder.path("/file/" + id).build().toString();
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/deletefile")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/deletefile")
     public ResponseEntity<Object> deleteFile(@RequestParam("id") long id) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (!auth.isAuthenticated() || SecurityUtils.isUserAnonymous(auth)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         } else {
-            if (fileService.deleteFile(id, (UserPrincipal) auth.getPrincipal())) {
+            if (fileService.deleteFile(id, auth)) {
                 return ResponseEntity.ok().build();
             }
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/file/upload")
-    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
+    @RequestMapping(method = RequestMethod.PUT, value = "/file/upload")
+    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file,
+                                             UriComponentsBuilder uriComponentsBuilder) {
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             UploadFileResult uploadFileResult;
-            if (!auth.isAuthenticated() || SecurityUtils.isUserAnonymous(auth)) {
+            if (!auth.isAuthenticated() || !SecurityUtils.isUserAnonymous(auth)) {
                 UserPrincipal principal = (UserPrincipal) auth.getPrincipal();
                 uploadFileResult = fileService.uploadFile(file.getBytes(), file.getOriginalFilename(), principal);
             } else {
                 uploadFileResult = fileService.uploadFile(file.getBytes(), file.getOriginalFilename(), null);
             }
             if (uploadFileResult.isSuccess()) {
-                HttpHeaders headers = new HttpHeaders();
-                headers.add("Location", "/home");
-                return ResponseEntity.status(HttpStatus.FOUND).headers(headers).build();
+                return ResponseEntity.ok().body(uriComponentsBuilder.path(
+                        "/api/file/" + uploadFileResult.getFileId()).build().toString());
             }
         } catch (IOException e) {
             return ResponseEntity.badRequest().body("Failed to upload file.");
