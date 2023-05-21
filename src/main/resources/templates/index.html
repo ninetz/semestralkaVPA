@@ -24,12 +24,14 @@
   <tr>
     <th>Filename</th>
     <th>Link</th>
+    <th>Owner</th>
   </tr>
   </thead>
   <tbody>
   <tr th:each="file : ${filesModels}">
     <td th:text="${file.filename}"></td>
     <td scope="row"><a th:href="${templatePath + file.id}" th:text="${templatePath + file.id}"></a></td>
+    <td th:text="${file.user != null} ? ${file.user.username} : 'Anonymous'"></td>
   </tr>
   </tbody>
 </table>
