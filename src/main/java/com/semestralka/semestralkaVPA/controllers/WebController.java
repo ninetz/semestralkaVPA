@@ -12,7 +12,7 @@ public class WebController {
     @Autowired
     FileRepository fileRepository;
 
-    @GetMapping("/home")
+    @GetMapping("/")
     public String getHome(Model model, UriComponentsBuilder uriComponentsBuilder) {
         model.addAttribute("templatePath", uriComponentsBuilder.path("/api/file/").build().toString());
         model.addAttribute("filesModels", fileRepository.findAll());
