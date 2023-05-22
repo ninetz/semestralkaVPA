@@ -66,7 +66,7 @@ public class FileController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
-    @RequestMapping(method = RequestMethod.PUT, value = "/file/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @RequestMapping(method = RequestMethod.POST, value = "/file/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file,
                                              UriComponentsBuilder uriComponentsBuilder) {
         try {
